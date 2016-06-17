@@ -206,7 +206,8 @@ func InstCpuStats(last, cur *v1.ContainerStats) (*CpuInstStats, error) {
 			return 0, fmt.Errorf("cumulative stats decrease")
 		}
 		valueDelta := curValue - lastValue
-		return (valueDelta * 1e9) / timeDeltaNs, nil
+		// Use float64 to keep precision
+		return uint64(float64(valueDelta) / float64(timeDeltaNs) * 1e9), nil
 	}
 	total, err := convertToRate(last.Cpu.Usage.Total, cur.Cpu.Usage.Total)
 	if err != nil {
@@ -291,7 +292,8 @@ func instCpuStats(last, cur *v1.ContainerStats) (*CpuInstStats, error) {
 			return 0, fmt.Errorf("cumulative stats decrease")
 		}
 		valueDelta := curValue - lastValue
-		return (valueDelta * 1e9) / timeDeltaNs, nil
+		// Use float64 to keep precision
+		return uint64(float64(valueDelta) / float64(timeDeltaNs) * 1e9), nil
 	}
 	total, err := convertToRate(last.Cpu.Usage.Total, cur.Cpu.Usage.Total)
 	if err != nil {
